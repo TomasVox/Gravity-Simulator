@@ -315,13 +315,9 @@ int main()
     std::vector<Body> bodies;
     bodies.reserve(10);
     Body sun(vertices.size(), 6.0f, 10000.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f});
-    Body earth(vertices.size(), 2.0f, 3.0f, {36.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 0.5f, 0.2f, 1.0f});
-    Body moon(vertices.size(), 1.0f, 0.037f, {39.628f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 0.5f, 0.2f, 1.0f});
+    Body earth(vertices.size(), 2.0f, 3.0f, {36.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.1f, 0.4f, 1.0f, 1.0f});
     Body mercury(vertices.size(), 1.0f, 0.166f, {19.5f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 0.5f, 0.2f, 1.0f});
     Body venus(vertices.size(), 2.0f, 2.45f, {27.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 0.5f, 0.2f, 1.0f});
-
-    moon.calcInitVelocity(earth);
-    glm::vec3 moonVel = moon.velocity;
 
     earth.calcInitVelocity(sun);
     mercury.calcInitVelocity(sun);
@@ -329,15 +325,9 @@ int main()
 
     bodies.push_back(sun);
     bodies.push_back(earth);
-    bodies.push_back(moon);
     bodies.push_back(venus);
     bodies.push_back(mercury);
-
-    //moon.calcInitVelocity(earth);
-    //mercury.calcInitVelocity(sun);
-    //venus.calcInitVelocity(sun);
     //std::cout << earth.velocity.x << ", " << earth.velocity.y << ", " << earth.velocity.z << std::endl;
-    //Body moon(vertices.size(), 1.0f, 50.0f, {20.0f ,0.1f, 1.5f}, {0.0f, 0.0f, 0.0f}, bodies); // Moon is used as a scale quantifier
 
     engine.setVBO(vertices.size() * sizeof(vec<3>), vertices.data());
     GLuint modelLoc = glGetUniformLocation(engine.activeProgram, "modelMat");
@@ -358,10 +348,8 @@ int main()
         processInput(engine.window, camera, dt);
 
         applyPhysics(bodies, dt);
-        bodies[2].velocity = {0.0f, 0.0f, 0.0f};
-        bodies[2].velocity = bodies[1].velocity + moonVel;
 
-        std::cout << bodies[1].pos.x << ", " << bodies[1].pos.y << ", " << bodies[1].pos.z << std::endl;
+        //std::cout << bodies[1].pos.x << ", " << bodies[1].pos.y << ", " << bodies[1].pos.z << std::endl;
 
         for (size_t i = 0; i<bodies.size(); i++)
             bodies[i].draw(engine.activeProgram, modelLoc, colorLoc);
